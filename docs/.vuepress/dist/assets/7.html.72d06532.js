@@ -1,0 +1,1 @@
+const t={key:"v-23ca1faf",path:"/js/7.html",title:"07 | \u6570\u7EC4\u539F\u7406\uFF08\u4E0A\uFF09\uFF1A\u5E2E\u4F60\u68B3\u7406\u773C\u82B1\u7F2D\u4E71\u7684\u6570\u7EC4 API",lang:"en-US",frontmatter:{},excerpt:"",headers:[],git:{},filePathRelative:"js/7.md"};export{t as data};
