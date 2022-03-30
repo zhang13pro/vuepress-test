@@ -11,6 +11,18 @@ export const data = {
       "title": "组件",
       "slug": "组件",
       "children": []
+    },
+    {
+      "level": 2,
+      "title": "lg-net",
+      "slug": "lg-net",
+      "children": []
+    },
+    {
+      "level": 2,
+      "title": "lg-node",
+      "slug": "lg-node",
+      "children": []
     }
   ],
   "git": {

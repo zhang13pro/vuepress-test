@@ -1,0 +1,1 @@
+import{r as e,o as r,f as t}from"./app.60568e47.js";import{_}from"./plugin-vue_export-helper.21dcd24c.js";const c={};function n(s,a){const o=e("lg-ts-1");return r(),t(o)}var l=_(c,[["render",n]]);export{l as default};
