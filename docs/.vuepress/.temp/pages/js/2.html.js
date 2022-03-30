@@ -75,6 +75,15 @@ export const data = {
       "children": []
     }
   ],
-  "git": {},
+  "git": {
+    "updatedTime": 1648648260000,
+    "contributors": [
+      {
+        "name": "zhang13pro",
+        "email": "lexzhang13@qq.com",
+        "commits": 1
+      }
+    ]
+  },
   "filePathRelative": "js/2.md"
 }

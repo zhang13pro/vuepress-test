@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="generator" content="VuePress 2.0.0-beta.36">
+    <style>
+      :root {
+        --c-bg: #fff;
+      }
+      html.dark {
+        --c-bg: #22272e;
+      }
+      html, body {
+        background-color: var(--c-bg);
+      }
+    </style>
+    <script>
+      const userMode = localStorage.getItem('vuepress-color-scheme');
+			const systemDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+			if (userMode === 'dark' || (userMode !== 'light' && systemDarkMode)) {
+				document.documentElement.classList.toggle('dark', true);
+			}
+    </script>
+    <title>20 | 原理解析：JS 代码是如何被浏览器引擎编译、执行的？ | </title><meta name="description" content="">
+    <link rel="modulepreload" href="/assets/app.7723def3.js"><link rel="modulepreload" href="/assets/20.html.864a741d.js"><link rel="modulepreload" href="/assets/20.html.73c0dc42.js"><link rel="modulepreload" href="/assets/plugin-vue_export-helper.21dcd24c.js">
+    <link rel="stylesheet" href="/assets/style.39d5bbe5.css">
+  </head>
+  <body>
+    <div id="app"><!--[--><div class="theme-container"><!--[--><header ref_key="navbar" class="navbar"><div class="toggle-sidebar-button" title="toggle sidebar" aria-expanded="false" role="button" tabindex="0"><div class="icon" aria-hidden="true"><span></span><span></span><span></span></div></div><span><a href="/" class=""><!----><!----></a></span><div class="navbar-items-wrapper" style=""><!--[--><!--]--><!----><!--[--><!--]--><button class="toggle-dark-button" title="toggle dark mode"><svg style="" class="icon" focusable="false" viewBox="0 0 32 32"><path d="M16 12.005a4 4 0 1 1-4 4a4.005 4.005 0 0 1 4-4m0-2a6 6 0 1 0 6 6a6 6 0 0 0-6-6z" fill="currentColor"></path><path d="M5.394 6.813l1.414-1.415l3.506 3.506L8.9 10.318z" fill="currentColor"></path><path d="M2 15.005h5v2H2z" fill="currentColor"></path><path d="M5.394 25.197L8.9 21.691l1.414 1.415l-3.506 3.505z" fill="currentColor"></path><path d="M15 25.005h2v5h-2z" fill="currentColor"></path><path d="M21.687 23.106l1.414-1.415l3.506 3.506l-1.414 1.414z" fill="currentColor"></path><path d="M25 15.005h5v2h-5z" fill="currentColor"></path><path d="M21.687 8.904l3.506-3.506l1.414 1.415l-3.506 3.505z" fill="currentColor"></path><path d="M15 2.005h2v5h-2z" fill="currentColor"></path></svg><svg style="display:none;" class="icon" focusable="false" viewBox="0 0 32 32"><path d="M13.502 5.414a15.075 15.075 0 0 0 11.594 18.194a11.113 11.113 0 0 1-7.975 3.39c-.138 0-.278.005-.418 0a11.094 11.094 0 0 1-3.2-21.584M14.98 3a1.002 1.002 0 0 0-.175.016a13.096 13.096 0 0 0 1.825 25.981c.164.006.328 0 .49 0a13.072 13.072 0 0 0 10.703-5.555a1.01 1.01 0 0 0-.783-1.565A13.08 13.08 0 0 1 15.89 4.38A1.015 1.015 0 0 0 14.98 3z" fill="currentColor"></path></svg></button><!----></div></header><!--]--><div class="sidebar-mask"></div><!--[--><aside class="sidebar"><!----><!--[--><!--]--><ul class="sidebar-items"><!--[--><li><p tabindex="0" class="sidebar-item sidebar-heading">20 | 原理解析：JS 代码是如何被浏览器引擎编译、执行的？ <!----></p><!----></li><!--]--></ul><!--[--><!--]--></aside><!--]--><!--[--><main class="page"><!--[--><!--]--><div class="theme-default-content"><div data-v-1605a430><h1 data-v-1605a430="" class="main-title"> 20 | 原理解析：JS 代码是如何被浏览器引擎编译、执行的？ </h1><div data-v-1605a430="" class="main-tips"> 2021/03/15 <span data-v-1605a430="" class="auth">若离</span></div><div data-v-1605a430="" class="media-player-wrap"><div data-v-6ecd2302="" data-v-1605a430=""><div data-v-6ecd2302="" class="media-container"><div data-v-6ecd2302="" class="button-wrap inline-block"><div data-v-6ecd2302="" class="button-icon inline-block"></div></div><div data-v-6ecd2302="" class="data-wrap inline-block"><div data-v-6ecd2302="" class="progress-bar"><div class="vue-slider vue-slider-ltr" style="padding:7px 0px;width:auto;height:4px;"><div class="vue-slider-rail" style="height:2px;background:rgb(213, 218, 223);border-radius:1.5px;"><div class="vue-slider-process" style="height:100%;top:0px;left:0%;width:0%;transition-property:width, left;transition-duration:0.5s;background:rgb(252, 215, 102);"></div><div aria-valuetext="00:00/10:10" class="vue-slider-dot vue-slider-dot-hover" role="slider" aria-valuenow="0" aria-valuemin="0" aria-valuemax="610" aria-orientation="horizontal" tabindex="0" style="width:14px;height:14px;transform:translate(-50%, -50%);top:50%;left:0%;transition:left 0.5s ease 0s;"><div class="vue-slider-dot-handle" style="width:16px;height:16px;background:rgb(252, 215, 102);box-shadow:none;margin-top:-1px;z-index:1;"></div><div class="vue-slider-dot-tooltip vue-slider-dot-tooltip-top"><div class="vue-slider-dot-tooltip-inner vue-slider-dot-tooltip-inner-top" style="padding:2px 12px;border-radius:14px;font-size:14px;color:rgb(0, 0, 0);background:rgb(252, 215, 102);min-width:20px;border-color:rgb(252, 215, 102);"><span class="vue-slider-dot-tooltip-text">00:00/10:10</span></div></div></div></div></div></div><div data-v-6ecd2302="" class="detail-wrap"><div data-v-6ecd2302="" class="detail-one">26.54M</div><div data-v-6ecd2302="" class="detail-two">00:00/10:10</div></div></div><div data-v-6ecd2302="" class="division-line inline-block"></div><div data-v-6ecd2302="" class="viedo-wrap inline-block"><div data-v-6ecd2302="" class="viedo-icon"></div><div data-v-6ecd2302="" class="text">看视频</div></div></div></div></div><div data-v-1605a430="" class="main-container"><div data-v-1605a430="" class="rich-text-wrap"><p data-nodeid="593" class=""> 上一讲我们讨论了 JavaScript 引擎的 Eventloop 相关内容，今天我们来看看浏览器引擎是如何编译、执行 JS 代码的，目的是帮你深入理解浏览器引擎所做的工作。 </p><p data-nodeid="594"> 本讲我先带你分析浏览器引擎对 JS 代码的编译情况，并结合你日常的 JavaScript 开发经验，一起重新理解底层的编译解析机制。对其底层原理的理解，将有助于你理解前端的跨端应用，以及一套代码生成多种小程序相关框架的底层逻辑。 </p><p data-nodeid="595">那么，在课程开始前请你先思考：</p><ol data-nodeid="596"><li data-nodeid="597"><p data-nodeid="598">JavaScript 代码被执行分为哪几个阶段？</p></li><li data-nodeid="599"><p data-nodeid="600">AST 到底是做什么用的？</p></li></ol><p data-nodeid="601"> 带着思考去学习，相信你会收获更多。现在，就让我为你介绍 V8 引擎。 </p><h3 data-nodeid="602">V8 引擎介绍</h3><p data-nodeid="603"> 我们先看一下当前百花齐放的编程语言，主要分为编译型语言和解释型语言。 </p><ol data-nodeid="604"><li data-nodeid="605"><p data-nodeid="606"> 编译型语言的特点是在代码运行前编译器直接将对应的代码转换成机器码，运行时不需要再重新翻译，直接可以使用编译后的结果。 </p></li><li data-nodeid="607"><p data-nodeid="608"> 解释型语言也是需要将代码转换成机器码，但是和编译型的区别在于运行时需要转换。比较显著的特点是，解释型语言的执行速度要慢于编译型语言，因为解释型语言每次执行都需要把源码转换一次才能执行。 </p></li></ol><p data-nodeid="609"> 我们比较清楚的，像 Java 和 C++ 都是编译型语言；而 JavaScript 和 ruby 都是解释性语言，它们整体的执行速度都会略慢于编译型的语言。 </p><p data-nodeid="610"> 为了提高运行效率，很多浏览器厂商在也在不断努力。目前市面上有很多种 JS 引擎，例如 JavaScriptCore、chakra、V8 等。而比较现代的 JS 引擎，当数 V8，它引入了 Java 虚拟机和 C++ 编译器的众多技术，和早期的 JS 引擎工作方式已经有了很大的不同。 </p><p data-nodeid="611"> V8 是众多浏览器的 JS 引擎中性能表现最好的一个，并且它是 Chrome 的内核，Node.js 也是基于 V8 引擎研发的。V8 引擎很具有代表性，因此你有必要好好了解和学习。 </p><p data-nodeid="612"> 那么我们来看下 V8 引擎执行 JS 代码都要经过哪些阶段。 </p><ol data-nodeid="613"><li data-nodeid="614"><p data-nodeid="615"> Parse 阶段：V8 引擎负责将 JS 代码转换成 AST（抽象语法树）； </p></li><li data-nodeid="616"><p data-nodeid="617"> Ignition 阶段：解释器将 AST 转换为字节码，解析执行字节码也会为下一个阶段优化编译提供需要的信息； </p></li><li data-nodeid="618"><p data-nodeid="619"> TurboFan 阶段：编译器利用上个阶段收集的信息，将字节码优化为可以执行的机器码； </p></li><li data-nodeid="620"><p data-nodeid="621"> Orinoco 阶段：垃圾回收阶段，将程序中不再使用的内存空间进行回收。 </p></li></ol><p data-nodeid="622"> 其中，生成 AST、生成字节码、生成机器码是比较重要的三个阶段，下面我就对其进行详细分析，看看每个底层阶段到底做了哪些操作，会影响 JS 代码执行的编译执行。 </p><h3 data-nodeid="623">生成 AST</h3><p data-nodeid="624"> 身为一名前端开发，你肯定在日常工作中用过 Eslint 和 Babel 这两个工具，这些工具每个都和 AST 脱不了干系。V8 引擎就是通过编译器（Parse）将源代码解析成 AST 的。 </p><p data-nodeid="625"> AST 在实际工作中应用场景也比较多，我们来看看抽象语法树的应用场景，大致有下面几个： </p><ol data-nodeid="626"><li data-nodeid="627"><p data-nodeid="628">JS 反编译，语法解析；</p></li><li data-nodeid="629"><p data-nodeid="630">Babel 编译 ES6 语法；</p></li><li data-nodeid="631"><p data-nodeid="632">代码高亮；</p></li><li data-nodeid="633"><p data-nodeid="634">关键字匹配；</p></li><li data-nodeid="635"><p data-nodeid="636">代码压缩。</p></li></ol><p data-nodeid="637"> 这些场景的实现，都离不开通过将 JS 代码解析成 AST 来实现。生成 AST 分为两个阶段，一是词法分析，二是语法分析，我们来分别看下这两个阶段的情况。 </p><ol data-nodeid="638"><li data-nodeid="639"><p data-nodeid="640"> 词法分析：这个阶段会将源代码拆成最小的、不可再分的词法单元，称为 token。比如这行代码 var a =1；通常会被分解成 var 、a、=、2、; 这五个词法单元。另外刚才代码中的空格在 JavaScript 中是直接忽略的。 </p></li><li data-nodeid="641"><p data-nodeid="642"> 语法分析：这个过程是将词法单元转换成一个由元素逐级嵌套所组成的代表了程序语法结构的树，这个树被称为抽象语法树。 </p></li></ol><p data-nodeid="643"> 下面我们来简单看一下解析成抽象语法树之后是什么样子的，代码如下。 </p><div class="course-code-area"><div class="copy-btn"><div class="copy-icon"></div> 复制代码 </div><pre><code data-language="javascript"><ol><li><div class="code-word"><span class="hljs-comment">// 第一段代码</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> a = <span class="hljs-number">1</span>;
+</div></li><li><div class="code-word"><span class="hljs-comment">// 第二段代码</span>
+</div></li><li><div class="code-word"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sum</span> (<span class="hljs-params">a,b</span>) </span>{
+</div></li><li><div class="code-word">  <span class="hljs-keyword">return</span> a + b;
+</div></li><li><div class="code-word">}
+</div></li></ol></code></pre></div><p data-nodeid="645"> 将这两段代码，分别转换成 AST 抽象语法树之后返回的 JSON 格式如下。 </p><p data-nodeid="646"><strong data-nodeid="709">1</strong>. 第一段代码，编译后的结果： </p><div class="course-code-area"><div class="copy-btn"><div class="copy-icon"></div> 复制代码 </div><pre><code data-language="json"><ol><li><div class="code-word">{
+</div></li><li><div class="code-word">  <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;Program&quot;</span>,
+</div></li><li><div class="code-word">  <span class="hljs-attr">&quot;start&quot;</span>: <span class="hljs-number">0</span>,
+</div></li><li><div class="code-word">  <span class="hljs-attr">&quot;end&quot;</span>: <span class="hljs-number">10</span>,
+</div></li><li><div class="code-word">  <span class="hljs-attr">&quot;body&quot;</span>: [
+</div></li><li><div class="code-word">    {
+</div></li><li><div class="code-word">      <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;VariableDeclaration&quot;</span>,
+</div></li><li><div class="code-word">      <span class="hljs-attr">&quot;start&quot;</span>: <span class="hljs-number">0</span>,
+</div></li><li><div class="code-word">      <span class="hljs-attr">&quot;end&quot;</span>: <span class="hljs-number">10</span>,
+</div></li><li><div class="code-word">      <span class="hljs-attr">&quot;declarations&quot;</span>: [
+</div></li><li><div class="code-word">        {
+</div></li><li><div class="code-word">          <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;VariableDeclarator&quot;</span>,
+</div></li><li><div class="code-word">          <span class="hljs-attr">&quot;start&quot;</span>: <span class="hljs-number">4</span>,
+</div></li><li><div class="code-word">          <span class="hljs-attr">&quot;end&quot;</span>: <span class="hljs-number">9</span>,
+</div></li><li><div class="code-word">          <span class="hljs-attr">&quot;id&quot;</span>: {
+</div></li><li><div class="code-word">            <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;Identifier&quot;</span>,
+</div></li><li><div class="code-word">            <span class="hljs-attr">&quot;start&quot;</span>: <span class="hljs-number">4</span>,
+</div></li><li><div class="code-word">            <span class="hljs-attr">&quot;end&quot;</span>: <span class="hljs-number">5</span>,
+</div></li><li><div class="code-word">            <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;a&quot;</span>
+</div></li><li><div class="code-word">          },
+</div></li><li><div class="code-word">          <span class="hljs-attr">&quot;init&quot;</span>: {
+</div></li><li><div class="code-word">            <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;Literal&quot;</span>,
+</div></li><li><div class="code-word">            <span class="hljs-attr">&quot;start&quot;</span>: <span class="hljs-number">8</span>,
+</div></li><li><div class="code-word">            <span class="hljs-attr">&quot;end&quot;</span>: <span class="hljs-number">9</span>,
+</div></li><li><div class="code-word">            <span class="hljs-attr">&quot;value&quot;</span>: <span class="hljs-number">1</span>,
+</div></li><li><div class="code-word">            <span class="hljs-attr">&quot;raw&quot;</span>: <span class="hljs-string">&quot;1&quot;</span>
+</div></li><li><div class="code-word">          }
+</div></li><li><div class="code-word">        }
+</div></li><li><div class="code-word">      ],
+</div></li><li><div class="code-word">      <span class="hljs-attr">&quot;kind&quot;</span>: <span class="hljs-string">&quot;var&quot;</span>
+</div></li><li><div class="code-word">    }
+</div></li><li><div class="code-word">  ],
+</div></li><li><div class="code-word">  <span class="hljs-attr">&quot;sourceType&quot;</span>: <span class="hljs-string">&quot;module&quot;</span>
+</div></li><li><div class="code-word">}
+</div></li></ol></code></pre></div><p data-nodeid="648"><strong data-nodeid="714">2</strong>. 第二段代码，编译出来的结果： </p><div class="course-code-area"><div class="copy-btn"><div class="copy-icon"></div> 复制代码 </div><pre><code data-language="json"><ol><li><div class="code-word">{
+</div></li><li><div class="code-word">  <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;Program&quot;</span>,
+</div></li><li><div class="code-word">  <span class="hljs-attr">&quot;start&quot;</span>: <span class="hljs-number">0</span>,
+</div></li><li><div class="code-word">  <span class="hljs-attr">&quot;end&quot;</span>: <span class="hljs-number">38</span>,
+</div></li><li><div class="code-word">  <span class="hljs-attr">&quot;body&quot;</span>: [
+</div></li><li><div class="code-word">    {
+</div></li><li><div class="code-word">      <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;FunctionDeclaration&quot;</span>,
+</div></li><li><div class="code-word">      <span class="hljs-attr">&quot;start&quot;</span>: <span class="hljs-number">0</span>,
+</div></li><li><div class="code-word">      <span class="hljs-attr">&quot;end&quot;</span>: <span class="hljs-number">38</span>,
+</div></li><li><div class="code-word">      <span class="hljs-attr">&quot;id&quot;</span>: {
+</div></li><li><div class="code-word">        <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;Identifier&quot;</span>,
+</div></li><li><div class="code-word">        <span class="hljs-attr">&quot;start&quot;</span>: <span class="hljs-number">9</span>,
+</div></li><li><div class="code-word">        <span class="hljs-attr">&quot;end&quot;</span>: <span class="hljs-number">12</span>,
+</div></li><li><div class="code-word">        <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;sum&quot;</span>
+</div></li><li><div class="code-word">      },
+</div></li><li><div class="code-word">      <span class="hljs-attr">&quot;expression&quot;</span>: <span class="hljs-literal">false</span>,
+</div></li><li><div class="code-word">      <span class="hljs-attr">&quot;generator&quot;</span>: <span class="hljs-literal">false</span>,
+</div></li><li><div class="code-word">      <span class="hljs-attr">&quot;async&quot;</span>: <span class="hljs-literal">false</span>,
+</div></li><li><div class="code-word">      <span class="hljs-attr">&quot;params&quot;</span>: [
+</div></li><li><div class="code-word">        {
+</div></li><li><div class="code-word">          <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;Identifier&quot;</span>,
+</div></li><li><div class="code-word">          <span class="hljs-attr">&quot;start&quot;</span>: <span class="hljs-number">14</span>,
+</div></li><li><div class="code-word">          <span class="hljs-attr">&quot;end&quot;</span>: <span class="hljs-number">15</span>,
+</div></li><li><div class="code-word">          <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;a&quot;</span>
+</div></li><li><div class="code-word">        },
+</div></li><li><div class="code-word">        {
+</div></li><li><div class="code-word">          <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;Identifier&quot;</span>,
+</div></li><li><div class="code-word">          <span class="hljs-attr">&quot;start&quot;</span>: <span class="hljs-number">16</span>,
+</div></li><li><div class="code-word">          <span class="hljs-attr">&quot;end&quot;</span>: <span class="hljs-number">17</span>,
+</div></li><li><div class="code-word">          <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;b&quot;</span>
+</div></li><li><div class="code-word">        }
+</div></li><li><div class="code-word">      ],
+</div></li><li><div class="code-word">      <span class="hljs-attr">&quot;body&quot;</span>: {
+</div></li><li><div class="code-word">        <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;BlockStatement&quot;</span>,
+</div></li><li><div class="code-word">        <span class="hljs-attr">&quot;start&quot;</span>: <span class="hljs-number">19</span>,
+</div></li><li><div class="code-word">        <span class="hljs-attr">&quot;end&quot;</span>: <span class="hljs-number">38</span>,
+</div></li><li><div class="code-word">        <span class="hljs-attr">&quot;body&quot;</span>: [
+</div></li><li><div class="code-word">          {
+</div></li><li><div class="code-word">            <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;ReturnStatement&quot;</span>,
+</div></li><li><div class="code-word">            <span class="hljs-attr">&quot;start&quot;</span>: <span class="hljs-number">23</span>,
+</div></li><li><div class="code-word">            <span class="hljs-attr">&quot;end&quot;</span>: <span class="hljs-number">36</span>,
+</div></li><li><div class="code-word">            <span class="hljs-attr">&quot;argument&quot;</span>: {
+</div></li><li><div class="code-word">              <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;BinaryExpression&quot;</span>,
+</div></li><li><div class="code-word">              <span class="hljs-attr">&quot;start&quot;</span>: <span class="hljs-number">30</span>,
+</div></li><li><div class="code-word">              <span class="hljs-attr">&quot;end&quot;</span>: <span class="hljs-number">35</span>,
+</div></li><li><div class="code-word">              <span class="hljs-attr">&quot;left&quot;</span>: {
+</div></li><li><div class="code-word">                <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;Identifier&quot;</span>,
+</div></li><li><div class="code-word">                <span class="hljs-attr">&quot;start&quot;</span>: <span class="hljs-number">30</span>,
+</div></li><li><div class="code-word">                <span class="hljs-attr">&quot;end&quot;</span>: <span class="hljs-number">31</span>,
+</div></li><li><div class="code-word">                <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;a&quot;</span>
+</div></li><li><div class="code-word">              },
+</div></li><li><div class="code-word">              <span class="hljs-attr">&quot;operator&quot;</span>: <span class="hljs-string">&quot;+&quot;</span>,
+</div></li><li><div class="code-word">              <span class="hljs-attr">&quot;right&quot;</span>: {
+</div></li><li><div class="code-word">                <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;Identifier&quot;</span>,
+</div></li><li><div class="code-word">                <span class="hljs-attr">&quot;start&quot;</span>: <span class="hljs-number">34</span>,
+</div></li><li><div class="code-word">                <span class="hljs-attr">&quot;end&quot;</span>: <span class="hljs-number">35</span>,
+</div></li><li><div class="code-word">                <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;b&quot;</span>
+</div></li><li><div class="code-word">              }
+</div></li><li><div class="code-word">            }
+</div></li><li><div class="code-word">          }
+</div></li><li><div class="code-word">        ]
+</div></li><li><div class="code-word">      }
+</div></li><li><div class="code-word">    }
+</div></li><li><div class="code-word">  ],
+</div></li><li><div class="code-word">  <span class="hljs-attr">&quot;sourceType&quot;</span>: <span class="hljs-string">&quot;module&quot;</span>
+</div></li><li><div class="code-word">}
+</div></li></ol></code></pre></div><p data-nodeid="650"> 从上面编译出的结果可以看到，AST 只是源代码语法结构的一种抽象的表示形式，计算机也不会去直接去识别 JS 代码，转换成抽象语法树也只是识别这一过程中的第一步。 </p><p data-nodeid="651"> 前面我提到了前端领域经常使用一个工具 Babel，比如现在浏览器还不支持 ES6 语法，需要将其转换成 ES5 语法，这个过程就要借助 Babel 来实现。将 ES6 源码解析成 AST，再将 ES6 语法的抽象语法树转成 ES5 的抽象语法树，最后利用它来生成 ES5 的源代码。另外 ESlint 的原理也大致相同，检测流程也是将源码转换成抽象语法树，再利用它来检测代码规范。 </p><p data-nodeid="652"> 抽象语法树是一个很重要的概念，需要深入了解，才能更好地帮助我们理解所写代码。如果你想自己把代码翻译成 AST，我给你提供一个地址，代码帖进去就可以转换成相应的 AST：<a href="https://astexplorer.net/" data-nodeid="720">AST 在线转换</a>。 </p><p data-nodeid="653">好了，接下来我们讨论一下 AST 如何转换成字节码。</p><h3 data-nodeid="654">生成字节码</h3><p data-nodeid="655"> 将抽象语法树转换为字节码，也就是上面提到的 Ignition 阶段。这个阶段就是将 AST 转换为字节码，但是之前的 V8 版本不会经过这个过程，最早只是通过 AST 直接转换成机器码，而后面几个版本中才对此进行了改进。如果将 AST 直接转换为机器码还是会有一些问题存在的，例如： </p><ol data-nodeid="656"><li data-nodeid="657"><p data-nodeid="658"> 直接转换会带来内存占用过大的问题，因为将抽象语法树全部生成了机器码，而机器码相比字节码占用的内存多了很多； </p></li><li data-nodeid="659"><p data-nodeid="660"> 某些 JavaScript 使用场景使用解释器更为合适，解析成字节码，有些代码没必要生成机器码，进而尽可能减少了占用内存过大的问题。 </p></li></ol><p data-nodeid="661"> 而后，官方在 V8 的 v5.6 版本中还是将抽象语法树转换成字节码这一过程又加上了，重新加入了字节码的处理过程。再然后，V8 重新引进了 Ignition 解释器，将抽象语法树转换成字节码后，内存占用显著下降了，同时也可以使用 JIT 编译器做进一步的优化。 </p><p data-nodeid="662"> 其实字节码是介于 AST 和机器码之间的一种代码，需要将其转换成机器码后才能执行，字节码可以理解为是机器码的一种抽象。Ignition 解释器除了可以快速生成没有优化的字节码外，还可以执行部分字节码。这里你只需要知道这是个中间代码就够了，我们接着看最后一个阶段。 </p><h3 data-nodeid="663">生成机器码</h3><p data-nodeid="664"> 在 Ignition 解释器处理完之后，如果发现一段代码被重复执行多次的情况，生成的字节码以及分析数据会传给 TurboFan 编译器，它会根据分析数据的情况生成优化好的机器码。再执行这段代码之后，只需要直接执行编译后的机器码，这样性能就会更好。 </p><p data-nodeid="665"> 这里简单说一下 TurboFan 编译器，它是 JIT 优化的编译器，因为 V8 引擎是多线程的，TurboFan 的编译线程和生成字节码不会在同一个线程上，这样可以和 Ignition 解释器相互配合着使用，不受另一方的影响。 </p><p data-nodeid="1029"> 由 Ignition 解释器收集的分析数据被 TurboFan 编译器使用，主要是通过一种推测优化的技术，生成已经优化的机器码来执行。这个过程我只是通过文字描述，可能你很难理解，你通过一张图来看下整个生成抽象语法树，再到转换成字节码以及机器码的一个过程。 </p><p data-nodeid="1030" class="te-preview-highlight"><img src="https://s0.lgstatic.com/i/image6/M00/1D/05/Cgp9HWBPFDuAS9GdAAGqbvfuWtc433.png" alt="图片3.png" data-nodeid="1034"></p><p data-nodeid="668"> 上面这张图可以很清晰地看到整个 V8 引擎编译和解析代码的流程。那么到这里，关于 V8 引擎对 JS 的编译解析过程大致就讲完了。因为 V8 涉及的内容实在太多，想要将它理解深刻，你就需要反复琢磨其中的流程，以及我带你分析的每一个步骤。 </p><h3 data-nodeid="669">总结</h3><p data-nodeid="670"> 目前市面上比较主流的 JavaScript 引擎编译过程大部分都类似，主要原因可能在于某些地方加入了特定的优化，但是其核心思路和 V8 大体上是一致的，感兴趣的话你可以了解一下其他引擎的情况，这里就不过多展开了。 </p><p data-nodeid="671"> 那么讲到这里，开篇我提出来的问题相信你基本就可以回答出来了。另外 AST 是比较重要的一个知识点，只有学习了 AST 之后，你才能在自己实现前端工具上面游刃有余。因此希望你可以多研究一些前端工具，来提升你的业务开发效率以及编程能力，这对你未来的成长和晋升是很有帮助的。 </p><p data-nodeid="672" class=""> 下一讲我要带你探究宏任务和微任务的运行机制，这也是 Eventloop 知识里面一个比较关键的知识点，你可以预习一下，届时我们再一起讨论。 </p></div></div></div></div><footer class="page-meta"><!----><div class="meta-item last-updated"><span class="meta-item-label">Last Updated: </span><!----></div><div class="meta-item contributors"><span class="meta-item-label">Contributors: </span><span class="meta-item-info"><!--[--><!--[--><span class="contributor" title="email: lexzhang13@qq.com">zhang13pro</span><!----><!--]--><!--]--></span></div></footer><!----><!--[--><!--]--></main><!--]--></div><!----><!--]--></div>
+    <script type="module" src="/assets/app.7723def3.js" defer></script>
+  </body>
+</html>

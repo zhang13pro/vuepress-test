@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="generator" content="VuePress 2.0.0-beta.36">
+    <style>
+      :root {
+        --c-bg: #fff;
+      }
+      html.dark {
+        --c-bg: #22272e;
+      }
+      html, body {
+        background-color: var(--c-bg);
+      }
+    </style>
+    <script>
+      const userMode = localStorage.getItem('vuepress-color-scheme');
+			const systemDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+			if (userMode === 'dark' || (userMode !== 'light' && systemDarkMode)) {
+				document.documentElement.classList.toggle('dark', true);
+			}
+    </script>
+    <title>07 | 数组原理（上）：帮你梳理眼花缭乱的数组 API | </title><meta name="description" content="">
+    <link rel="modulepreload" href="/assets/app.7723def3.js"><link rel="modulepreload" href="/assets/7.html.419f1b7e.js"><link rel="modulepreload" href="/assets/7.html.73123286.js"><link rel="modulepreload" href="/assets/plugin-vue_export-helper.21dcd24c.js">
+    <link rel="stylesheet" href="/assets/style.39d5bbe5.css">
+  </head>
+  <body>
+    <div id="app"><!--[--><div class="theme-container"><!--[--><header ref_key="navbar" class="navbar"><div class="toggle-sidebar-button" title="toggle sidebar" aria-expanded="false" role="button" tabindex="0"><div class="icon" aria-hidden="true"><span></span><span></span><span></span></div></div><span><a href="/" class=""><!----><!----></a></span><div class="navbar-items-wrapper" style=""><!--[--><!--]--><!----><!--[--><!--]--><button class="toggle-dark-button" title="toggle dark mode"><svg style="" class="icon" focusable="false" viewBox="0 0 32 32"><path d="M16 12.005a4 4 0 1 1-4 4a4.005 4.005 0 0 1 4-4m0-2a6 6 0 1 0 6 6a6 6 0 0 0-6-6z" fill="currentColor"></path><path d="M5.394 6.813l1.414-1.415l3.506 3.506L8.9 10.318z" fill="currentColor"></path><path d="M2 15.005h5v2H2z" fill="currentColor"></path><path d="M5.394 25.197L8.9 21.691l1.414 1.415l-3.506 3.505z" fill="currentColor"></path><path d="M15 25.005h2v5h-2z" fill="currentColor"></path><path d="M21.687 23.106l1.414-1.415l3.506 3.506l-1.414 1.414z" fill="currentColor"></path><path d="M25 15.005h5v2h-5z" fill="currentColor"></path><path d="M21.687 8.904l3.506-3.506l1.414 1.415l-3.506 3.505z" fill="currentColor"></path><path d="M15 2.005h2v5h-2z" fill="currentColor"></path></svg><svg style="display:none;" class="icon" focusable="false" viewBox="0 0 32 32"><path d="M13.502 5.414a15.075 15.075 0 0 0 11.594 18.194a11.113 11.113 0 0 1-7.975 3.39c-.138 0-.278.005-.418 0a11.094 11.094 0 0 1-3.2-21.584M14.98 3a1.002 1.002 0 0 0-.175.016a13.096 13.096 0 0 0 1.825 25.981c.164.006.328 0 .49 0a13.072 13.072 0 0 0 10.703-5.555a1.01 1.01 0 0 0-.783-1.565A13.08 13.08 0 0 1 15.89 4.38A1.015 1.015 0 0 0 14.98 3z" fill="currentColor"></path></svg></button><!----></div></header><!--]--><div class="sidebar-mask"></div><!--[--><aside class="sidebar"><!----><!--[--><!--]--><ul class="sidebar-items"><!--[--><li><p tabindex="0" class="sidebar-item sidebar-heading">07 | 数组原理（上）：帮你梳理眼花缭乱的数组 API <!----></p><!----></li><!--]--></ul><!--[--><!--]--></aside><!--]--><!--[--><main class="page"><!--[--><!--]--><div class="theme-default-content"><!--[--><h1 id="_07-数组原理-上-帮你梳理眼花缭乱的数组-api" tabindex="-1"><a class="header-anchor" href="#_07-数组原理-上-帮你梳理眼花缭乱的数组-api" aria-hidden="true">#</a> 07 | 数组原理（上）：帮你梳理眼花缭乱的数组 API</h1><div data-v-1605a430 class="rich-text-wrap"><p data-nodeid="2084" class="">欢迎来到第二个模块“深入数组篇”的学习。</p><p data-nodeid="2085"> JavaScript 数组的 API 经常会被 JS 开发者频繁使用，在整个 JavaScript 的学习过程中尤为重要。 </p><p data-nodeid="2086"> 数组作为一个最基础的一维数据结构，在各种编程语言中都充当着至关重要的角色，你很难想象没有数组的编程语言会是什么模样。特别是 JavaScript，它天生的灵活性，又进一步发挥了数组的特长，丰富了数组的使用场景。<strong data-nodeid="2221">可以毫不夸张地说，不深入地了解数组，就不足以写好 JavaScript。</strong></p><p data-nodeid="2087"> 随着前端框架的不断演进，React 和 Vue 等 MVVM 框架的流行，数据更新的同时视图也会随之更新。在通过前端框架实现大量的业务代码中，开发者都会用数组来进行数据的存储和各种“增删改查”等操作，从而实现对应前端视图层的更新。可见熟练掌握数组各种方法，并深入了解数组是很有必要的。 </p><p data-nodeid="2088"> 因此，我希望这一模块，能让你对数组有更深一步的理解，更加得心应手地运用数组的各种 API，并可以轻松实现面试中遇到的数组题目。 </p><p data-nodeid="2089"> 据不完全统计，在 LeetCode 题库的 1800 多道题目中，和数组相关的题目是最多的，有 300 多道，例如“合并两个有序数组”“两个数组的交集”等。其中有个别题目是大厂的面试题目，如果你有兴趣可以自己尝试去解答，我也会在课程中穿插讲解其中的一些数组类题目，帮助你更好地理解这部分知识。 </p><p data-nodeid="2090">那么，在课程开始前请你先思考几个问题。</p><ol data-nodeid="2091"><li data-nodeid="2092"><p data-nodeid="2093">数组的构造器有哪几种？</p></li><li data-nodeid="2094"><p data-nodeid="2095">哪些是改变自身的方法？</p></li><li data-nodeid="2096"><p data-nodeid="2097">哪些是不改变自身的方法？</p></li><li data-nodeid="2098"><p data-nodeid="2099">遍历的方法有哪些？</p></li></ol><p data-nodeid="2100"> 不知道这几个问题你是否能够准确地回答出来？那么我们就带着以上几个思考，开始这一讲的学习。 </p><h3 data-nodeid="2101">数组概念的探究</h3><p data-nodeid="2102"> 截至 ES7 规范，数组共包含 33 个标准的 API 方法和一个非标准的 API 方法，使用场景和使用方案纷繁复杂，其中还有不少坑。为了方便你可以循序渐进地学习这部分的内容，下面我将从数组的概念开始讲起。 </p><p data-nodeid="2103"> 由于数组的 API 较多，很多相近的名字也容易导致混淆，所以在这里我按照“会改变自身值的”“不会改变自身值的”“遍历方法”这三种类型分开讲解，让你对这些 API 形成更结构化的认识。 </p><h4 data-nodeid="2104">Array 的构造器</h4><p data-nodeid="2105"> Array 构造器用于创建一个新的数组。通常，我们推荐使用对象字面量的方式创建一个数组，例如 var a = [] 就是一个比较好的写法。但是，总有对象字面量表述乏力的时候，比如，我想创建一个长度为 6 的空数组，用对象字面量的方式是无法创建的，因此只能写成下述代码这样。 </p><div class="course-code-area"><div class="copy-btn"><div class="copy-icon"></div> 复制代码 </div><pre><code data-language="javascript"><ol><li><div class="code-word"><span class="hljs-comment">// 使用 Array 构造器，可以自定义长度</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> a = <span class="hljs-built_in">Array</span>(<span class="hljs-number">6</span>); <span class="hljs-comment">// [empty × 6]</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// 使用对象字面量</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> b = [];
+</div></li><li><div class="code-word">b.length = <span class="hljs-number">6</span>; <span class="hljs-comment">// [undefined × 6]</span>
+</div></li></ol></code></pre></div><p data-nodeid="2107" class="te-preview-highlight"> Array 构造器根据参数长度的不同，有如下两种不同的处理方式： </p><ul data-nodeid="2108"><li data-nodeid="2109"><p data-nodeid="2110"><strong data-nodeid="2244">new Array(arg1, arg2,…)</strong>，参数长度为 0 或长度大于等于 2 时，传入的参数将按照顺序依次成为新数组的第 0 至第 N 项（参数长度为 0 时，返回空数组）； </p></li><li data-nodeid="2111"><p data-nodeid="2112"><strong data-nodeid="2249">new Array(len)</strong>，当 len 不是数值时，处理同上，返回一个只包含 len 元素一项的数组；当 len 为数值时，len 最大不能超过 32 位无符号整型，即需要小于 2 的 32 次方（len 最大为 Math.pow(2,32)），否则将抛出 RangeError。 </p></li></ul><p data-nodeid="2113"> 以上就是 Array 构造器的基本情况，我们来看下 ES6 新增的几个构造方法。 </p><h4 data-nodeid="2114">ES6 新增的构造方法：Array.of 和 Array.from</h4><p data-nodeid="2115"> 鉴于数组的常用性，ES6 专门扩展了数组构造器 Array ，新增了 2 个方法：Array.of、Array.from。其中，Array.of 整体用得比较少；而 Array.from 具有灵活性，你在平常开发中应该会经常使用。那么关于两者的使用细节你真的了解吗？下面展开来聊下这两个方法。 </p><p data-nodeid="2116"><strong data-nodeid="2256">Array.of</strong></p><p data-nodeid="2117"> Array.of 用于将参数依次转化为数组中的一项，然后返回这个新数组，而不管这个参数是数字还是其他。它基本上与 Array 构造器功能一致，唯一的区别就在单个数字参数的处理上。 </p><p data-nodeid="2118"> 比如，在下面的这几行代码中，你可以看到区别：当参数为两个时，返回的结果是一致的；当参数是一个时，Array.of 会把参数变成数组里的一项，而构造器则会生成长度和第一个参数相同的空数组。 </p><div class="course-code-area"><div class="copy-btn"><div class="copy-icon"></div> 复制代码 </div><pre><code><ol><li><div class="code-word">Array.of(8.0); // [8]
+</div></li><li><div class="code-word">Array(8.0); // [empty × 8]
+</div></li><li><div class="code-word">Array.of(8.0, 5); // [8, 5]
+</div></li><li><div class="code-word">Array(8.0, 5); // [8, 5]
+</div></li><li><div class="code-word">Array.of(&#39;8&#39;); // [&quot;8&quot;]
+</div></li><li><div class="code-word">Array(&#39;8&#39;); // [&quot;8&quot;]
+</div></li></ol></code></pre></div><p data-nodeid="2120"><strong data-nodeid="2262">Array.from</strong></p><p data-nodeid="2121"> Array.from 的设计初衷是快速便捷地基于其他对象创建新数组，准确来说就是从一个类似数组的可迭代对象中创建一个新的数组实例。其实就是，只要一个对象有迭代器，Array.from 就能把它变成一个数组（注意：是返回新的数组，不改变原对象）。 </p><p data-nodeid="2122">从语法上看，Array.from 拥有 3 个参数：</p><ol data-nodeid="2123"><li data-nodeid="2124"><p data-nodeid="2125">类似数组的对象，必选；</p></li><li data-nodeid="2126"><p data-nodeid="2127"> 加工函数，新生成的数组会经过该函数的加工再返回； </p></li><li data-nodeid="2128"><p data-nodeid="2129">this 作用域，表示加工函数执行时 this 的值。</p></li></ol><p data-nodeid="2130"> 这三个参数里面第一个参数是必选的，后两个参数都是可选的。我们通过一段代码来看看它的用法。 </p><div class="course-code-area"><div class="copy-btn"><div class="copy-icon"></div> 复制代码 </div><pre><code data-language="javascript"><ol><li><div class="code-word"><span class="hljs-keyword">var</span> obj = {<span class="hljs-number">0</span>: <span class="hljs-string">&#39;a&#39;</span>, <span class="hljs-number">1</span>: <span class="hljs-string">&#39;b&#39;</span>, <span class="hljs-number">2</span>:<span class="hljs-string">&#39;c&#39;</span>, <span class="hljs-attr">length</span>: <span class="hljs-number">3</span>};
+</div></li><li><div class="code-word"><span class="hljs-built_in">Array</span>.from(obj, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value, index</span>)</span>{
+</div></li><li><div class="code-word">  <span class="hljs-built_in">console</span>.log(value, index, <span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>.length);
+</div></li><li><div class="code-word">  <span class="hljs-keyword">return</span> value.repeat(<span class="hljs-number">3</span>);   <span class="hljs-comment">//必须指定返回值，否则返回 undefined</span>
+</div></li><li><div class="code-word">}, obj);
+</div></li></ol></code></pre></div><p data-nodeid="2132"> 结果如下图所示。<br><img src="https://s0.lgstatic.com/i/image2/M01/09/B2/CgpVE2APjSiAGLqXAAB5v09b2C4966.png" alt="WechatIMG13.png" data-nodeid="2273"></p><p data-nodeid="2133"> 结果中可以看出 console.log(value, index, this, arguments.length) 对应的四个值，并且看到 return 的 value 重复了三遍，最后返回的数组为 [&quot;aaa&quot;,&quot;bbb&quot;,&quot;ccc&quot;]。 </p><p data-nodeid="2134"> 这表明了通过 Array.from 这个方法可以自己定义加工函数的处理方式，从而返回想要得到的值；如果不确定返回值，则会返回 undefined，最终生成的也是一个包含若干个 undefined 元素的空数组。 </p><p data-nodeid="2135"> 实际上，如果这里不指定 this 的话，加工函数完全可以是一个箭头函数。上述代码可以简写为如下形式。 </p><div class="course-code-area"><div class="copy-btn"><div class="copy-icon"></div> 复制代码 </div><pre><code data-language="javascript"><ol><li><div class="code-word"><span class="hljs-built_in">Array</span>.from(obj, (value) =&gt; value.repeat(<span class="hljs-number">3</span>));
+</div></li><li><div class="code-word"><span class="hljs-comment">//  控制台返回 (3) [&quot;aaa&quot;, &quot;bbb&quot;, &quot;ccc&quot;]</span>
+</div></li></ol></code></pre></div><p data-nodeid="2137"> 除了上述 obj 对象以外，拥有迭代器的对象还包括 String、Set、Map 等，Array.from 统统可以处理，请看下面的代码。 </p><div class="course-code-area"><div class="copy-btn"><div class="copy-icon"></div> 复制代码 </div><pre><code data-language="javascript"><ol><li><div class="code-word"><span class="hljs-comment">// String</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">Array</span>.from(<span class="hljs-string">&#39;abc&#39;</span>);         <span class="hljs-comment">// [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// Set</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">Array</span>.from(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>([<span class="hljs-string">&#39;abc&#39;</span>, <span class="hljs-string">&#39;def&#39;</span>])); <span class="hljs-comment">// [&quot;abc&quot;, &quot;def&quot;]</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// Map</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">Array</span>.from(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>([[<span class="hljs-number">1</span>, <span class="hljs-string">&#39;ab&#39;</span>], [<span class="hljs-number">2</span>, <span class="hljs-string">&#39;de&#39;</span>]])); 
+</div></li><li><div class="code-word"><span class="hljs-comment">// [[1, &#39;ab&#39;], [2, &#39;de&#39;]]</span>
+</div></li></ol></code></pre></div><p data-nodeid="2139"> 关于数组构造器 Array 新增的两个方法就讲解到这，下面接着介绍如何进行 Array 的判断。 </p><h4 data-nodeid="2140">Array 的判断</h4><p data-nodeid="2141"> Array.isArray 用来判断一个变量是否为数组类型，我们在“<a href="https://kaiwu.lagou.com/course/courseInfo.htm?courseId=601#/detail/pc?id=6174" data-nodeid="2299">01 | 代码基本功测试（上）：JS 的数据类型你了解多少</a>”中也讲过如何判断数据类型，不过那时只是针对 JS 的所有数据类型做一个判断，数组的判断当时并未详细讲解，那么我们现在来学习一下。 </p><p data-nodeid="2142"> 在 ES5 提供该方法之前，我们至少有如下 5 种方式去判断一个变量是否为数组。 </p><div class="course-code-area"><div class="copy-btn"><div class="copy-icon"></div> 复制代码 </div><pre><code data-language="javascript"><ol><li><div class="code-word"><span class="hljs-keyword">var</span> a = [];
+</div></li><li><div class="code-word"><span class="hljs-comment">// 1.基于instanceof</span>
+</div></li><li><div class="code-word">a <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Array</span>;
+</div></li><li><div class="code-word"><span class="hljs-comment">// 2.基于constructor</span>
+</div></li><li><div class="code-word">a.constructor === <span class="hljs-built_in">Array</span>;
+</div></li><li><div class="code-word"><span class="hljs-comment">// 3.基于Object.prototype.isPrototypeOf</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">Array</span>.prototype.isPrototypeOf(a);
+</div></li><li><div class="code-word"><span class="hljs-comment">// 4.基于getPrototypeOf</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">Object</span>.getPrototypeOf(a) === <span class="hljs-built_in">Array</span>.prototype;
+</div></li><li><div class="code-word"><span class="hljs-comment">// 5.基于Object.prototype.toString</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">Object</span>.prototype.toString.apply(a) === <span class="hljs-string">&#39;[object Array]&#39;</span>;
+</div></li></ol></code></pre></div><p data-nodeid="2144"> 上面这 5 个判断全部为 True，这里应该没什么疑问。实际上，通过 Object.prototype.toString 去判断一个值的类型，也是模块一的 01 讲判断数据类型中我给你推荐的方法。 </p><p data-nodeid="2145"> ES6 之后新增了一个 Array.isArray 方法，能直接判断数据类型是否为数组，但是如果 isArray 不存在，那么 Array.isArray 的 polyfill 通常可以这样写： </p><div class="course-code-area"><div class="copy-btn"><div class="copy-icon"></div> 复制代码 </div><pre><code data-language="javascript"><ol><li><div class="code-word"><span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray){
+</div></li><li><div class="code-word">  <span class="hljs-built_in">Array</span>.isArray = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">arg</span>)</span>{
+</div></li><li><div class="code-word">    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.prototype.toString.call(arg) === <span class="hljs-string">&#39;[object Array]&#39;</span>;
+</div></li><li><div class="code-word">  };
+</div></li><li><div class="code-word">}
+</div></li></ol></code></pre></div><p data-nodeid="2147"> 数组的基本概念到这里基本讲得差不多了，下面我们就来看看让人眼花缭乱的 30 多个数组的基本方法。 </p><h3 data-nodeid="2148">改变自身的方法</h3><p data-nodeid="2149"> 基于 ES6，会改变自身值的方法一共有 9 个，分别为 pop、push、reverse、shift、sort、splice、unshift，以及两个 ES6 新增的方法 copyWithin 和 fill。 </p><p data-nodeid="2150"> 接下来我们看一段代码，快速了解这些方法最基本的用法。 </p><div class="course-code-area"><div class="copy-btn"><div class="copy-icon"></div> 复制代码 </div><pre><code data-language="javascript"><ol><li><div class="code-word"><span class="hljs-comment">// pop方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-string">&quot;cat&quot;</span>, <span class="hljs-string">&quot;dog&quot;</span>, <span class="hljs-string">&quot;cow&quot;</span>, <span class="hljs-string">&quot;chicken&quot;</span>, <span class="hljs-string">&quot;mouse&quot;</span>];
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> item = array.pop();
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array); <span class="hljs-comment">// [&quot;cat&quot;, &quot;dog&quot;, &quot;cow&quot;, &quot;chicken&quot;]</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(item); <span class="hljs-comment">// mouse</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// push方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-string">&quot;football&quot;</span>, <span class="hljs-string">&quot;basketball&quot;</span>,  <span class="hljs-string">&quot;badminton&quot;</span>];
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> i = array.push(<span class="hljs-string">&quot;golfball&quot;</span>);
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array); 
+</div></li><li><div class="code-word"><span class="hljs-comment">// [&quot;football&quot;, &quot;basketball&quot;, &quot;badminton&quot;, &quot;golfball&quot;]</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(i); <span class="hljs-comment">// 4</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// reverse方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>];
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array2 = array.reverse();
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array); <span class="hljs-comment">// [5,4,3,2,1]</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array2===array); <span class="hljs-comment">// true</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// shift方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>];
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> item = array.shift();
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array); <span class="hljs-comment">// [2,3,4,5]</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(item); <span class="hljs-comment">// 1</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// unshift方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-string">&quot;red&quot;</span>, <span class="hljs-string">&quot;green&quot;</span>, <span class="hljs-string">&quot;blue&quot;</span>];
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> length = array.unshift(<span class="hljs-string">&quot;yellow&quot;</span>);
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array); <span class="hljs-comment">// [&quot;yellow&quot;, &quot;red&quot;, &quot;green&quot;, &quot;blue&quot;]</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(length); <span class="hljs-comment">// 4</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// sort方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-string">&quot;apple&quot;</span>,<span class="hljs-string">&quot;Boy&quot;</span>,<span class="hljs-string">&quot;Cat&quot;</span>,<span class="hljs-string">&quot;dog&quot;</span>];
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array2 = array.sort();
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array); <span class="hljs-comment">// [&quot;Boy&quot;, &quot;Cat&quot;, &quot;apple&quot;, &quot;dog&quot;]</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array2 == array); <span class="hljs-comment">// true</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// splice方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-string">&quot;apple&quot;</span>,<span class="hljs-string">&quot;boy&quot;</span>];
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> splices = array.splice(<span class="hljs-number">1</span>,<span class="hljs-number">1</span>);
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array); <span class="hljs-comment">// [&quot;apple&quot;]</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(splices); <span class="hljs-comment">// [&quot;boy&quot;]</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// copyWithin方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>]; 
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array2 = array.copyWithin(<span class="hljs-number">0</span>,<span class="hljs-number">3</span>);
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array===array2,array2);  <span class="hljs-comment">// true [4, 5, 3, 4, 5]</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// fill方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>];
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array2 = array.fill(<span class="hljs-number">10</span>,<span class="hljs-number">0</span>,<span class="hljs-number">3</span>);
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array===array2,array2); 
+</div></li><li><div class="code-word"><span class="hljs-comment">// true [10, 10, 10, 4, 5], 可见数组区间[0,3]的元素全部替换为10</span>
+</div></li></ol></code></pre></div><p data-nodeid="2152"> 我希望你能通过上面的代码，对这些方法形成一个直观的印象，并且能自己进行一定的实践来加深印象。不过上面的 sort() 方法的内涵比较多，在第 11 讲我会专门讲解，这里先不做过多的介绍了。 </p><p data-nodeid="2153"> 下面为了让你对这些 API 方法有更深刻的印象，我结合 Leetcode 中的第 88 题 《合并两个有序数组》，带你看下如何利用数组的多个改变自身的方法来解决这道题，题目是这样的： </p><div class="course-code-area"><div class="copy-btn"><div class="copy-icon"></div> 复制代码 </div><pre><code data-language="java"><ol><li><div class="code-word">给你两个有序整数数组 nums1 和 nums2，请你将 nums2 合并到 nums1 中，使 nums1 成为一个有序数组。
+</div></li><li><div class="code-word">输入:
+</div></li><li><div class="code-word">nums1 = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>]； m = <span class="hljs-number">3</span>
+</div></li><li><div class="code-word">nums2 = [<span class="hljs-number">2</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>]；       n = <span class="hljs-number">3</span>
+</div></li><li><div class="code-word">输出: [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">5</span>,<span class="hljs-number">6</span>]
+</div></li></ol></code></pre></div><p data-nodeid="2155">你可以仔细看下题目要求：</p><ul data-nodeid="2156"><li data-nodeid="2157"><p data-nodeid="2158"> 首先是将 nums2 合并到 nums1 里面，不新开数组，否则将无法通过； </p></li><li data-nodeid="2159"><p data-nodeid="2160"> 其次是合并完了之后 nums1 还是一个有序数组，这里也是需要注意的； </p></li><li data-nodeid="2161"><p data-nodeid="2162"> 另外样例里面 nums1 和 nums2 都有“2”这个数，也都需要将重复的合并进去。 </p></li></ul><p data-nodeid="2163"> 我们看上面这三点，可以思考下，既然要求不能新开数组，那么就需要利用数组改变自身的方法完成这个题目，应该怎么做呢？你可以试着先将想法写下来，之后再来看我提供的答案。 </p><p data-nodeid="2164"> 答案就是巧妙地利用数组的 API 中的 splice、push、sort 这三个方法，在原数组上进行操作，最终完成如下代码： </p><div class="course-code-area"><div class="copy-btn"><div class="copy-icon"></div> 复制代码 </div><pre><code data-language="javascript"><ol><li><div class="code-word"><span class="hljs-keyword">var</span> merge = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">nums1, m, nums2, n</span>) </span>{
+</div></li><li><div class="code-word">    nums1.splice(m);
+</div></li><li><div class="code-word">    nums2.splice(n);
+</div></li><li><div class="code-word">    nums1.push(...nums2);
+</div></li><li><div class="code-word">    nums1.sort(<span class="hljs-function">(<span class="hljs-params">a,b</span>) =&gt;</span> a - b);  <span class="hljs-comment">// nums1从小到大排列，所以是a-b</span>
+</div></li><li><div class="code-word">};
+</div></li></ol></code></pre></div><p data-nodeid="2166"> 我上面提供的这段代码是可以在 LeetCode 88 题提交 AC 通过的，没写出来的话你可以试着再敲一遍，最后提交完成通过。 </p><p data-nodeid="2167"> 改变数组自身的 9 个方法理解起来并不复杂，只要你对上面这些代码理解了，并且多加实践就够了，因此就讲解到这里。下面我们再来看看那些不改变自身的方法都是怎么使用的。 </p><h3 data-nodeid="2168">不改变自身的方法</h3><p data-nodeid="2169"> 基于 ES7，不会改变自身的方法也有 9 个，分别为 concat、join、slice、toString、toLocaleString、indexOf、lastIndexOf、未形成标准的 toSource，以及 ES7 新增的方法 includes。 </p><p data-nodeid="2170">我们还是通过代码，快速了解这些方法的最基本用法。</p><div class="course-code-area"><div class="copy-btn"><div class="copy-icon"></div> 复制代码 </div><pre><code data-language="javascript"><ol><li><div class="code-word"><span class="hljs-comment">// concat方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array2 = array.concat(<span class="hljs-number">4</span>,[<span class="hljs-number">5</span>,<span class="hljs-number">6</span>],[<span class="hljs-number">7</span>,<span class="hljs-number">8</span>,<span class="hljs-number">9</span>]);
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array2); <span class="hljs-comment">// [1, 2, 3, 4, 5, 6, 7, 8, 9]</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array); <span class="hljs-comment">// [1, 2, 3], 可见原数组并未被修改</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// join方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-string">&#39;We&#39;</span>, <span class="hljs-string">&#39;are&#39;</span>, <span class="hljs-string">&#39;Chinese&#39;</span>];
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array.join()); <span class="hljs-comment">// &quot;We,are,Chinese&quot;</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array.join(<span class="hljs-string">&#39;+&#39;</span>)); <span class="hljs-comment">// &quot;We+are+Chinese&quot;</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// slice方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-string">&quot;one&quot;</span>, <span class="hljs-string">&quot;two&quot;</span>, <span class="hljs-string">&quot;three&quot;</span>,<span class="hljs-string">&quot;four&quot;</span>, <span class="hljs-string">&quot;five&quot;</span>];
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array.slice()); <span class="hljs-comment">// [&quot;one&quot;, &quot;two&quot;, &quot;three&quot;,&quot;four&quot;, &quot;five&quot;]</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array.slice(<span class="hljs-number">2</span>,<span class="hljs-number">3</span>)); <span class="hljs-comment">// [&quot;three&quot;]</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// toString方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-string">&#39;Jan&#39;</span>, <span class="hljs-string">&#39;Feb&#39;</span>, <span class="hljs-string">&#39;Mar&#39;</span>, <span class="hljs-string">&#39;Apr&#39;</span>];
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> str = array.toString();
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(str); <span class="hljs-comment">// Jan,Feb,Mar,Apr</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// tolocalString方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array= [{<span class="hljs-attr">name</span>:<span class="hljs-string">&#39;zz&#39;</span>}, <span class="hljs-number">123</span>, <span class="hljs-string">&quot;abc&quot;</span>, <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()];
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> str = array.toLocaleString();
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(str); <span class="hljs-comment">// [object Object],123,abc,2016/1/5 下午1:06:23</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// indexOf方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-string">&#39;abc&#39;</span>, <span class="hljs-string">&#39;def&#39;</span>, <span class="hljs-string">&#39;ghi&#39;</span>,<span class="hljs-string">&#39;123&#39;</span>];
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array.indexOf(<span class="hljs-string">&#39;def&#39;</span>)); <span class="hljs-comment">// 1</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// includes方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-number">-0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>];
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array.includes(+<span class="hljs-number">0</span>)); <span class="hljs-comment">// true</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array.includes(<span class="hljs-number">1</span>)); <span class="hljs-comment">// true</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-literal">NaN</span>];
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array.includes(<span class="hljs-literal">NaN</span>)); <span class="hljs-comment">// true</span>
+</div></li></ol></code></pre></div><p data-nodeid="2172"> 上面我把不会改变数组的几个方法大致做了一个回顾，其中 includes 方法需要注意的是，如果元素中有 0，那么在判断过程中不论是 +0 还是 -0 都会判断为 True，这里的 includes 忽略了 +0 和 -0。 </p><p data-nodeid="2173"> 另外还有一个值得强调的是<strong data-nodeid="2344">slice 不改变自身，而 splice 会改变自身</strong>，你还是需要注意不要记错了。其中，slice 的语法是：arr.slice([start[, end]])，而 splice 的语法是：arr.splice(start,deleteCount[, item1[, item2[, …]]])。我们可以看到从第二个参数开始，二者就已经有区别了，splice 第二个参数是删除的个数，而 slice 的第二个参数是 end 的坐标（可选）。 </p><p data-nodeid="2174"> 此外，lastIndexOf 和 indexOf 基本功能差不多，不过 lastIndexOf 是从后面寻找元素的下标；而 toSource 方法还未形成标准，因此在这里不做过多介绍了。 </p><p data-nodeid="2175"> 不改变数组自身的 9 个方法到这里也基本回顾差不多了，下面我们接着看看数组遍历的方法都是怎么用的。 </p><h3 data-nodeid="2176">数组遍历的方法</h3><p data-nodeid="2177"> 基于 ES6，不会改变自身的遍历方法一共有 12 个，分别为 forEach、every、some、filter、map、reduce、reduceRight，以及 ES6 新增的方法 entries、find、findIndex、keys、values。 </p><p data-nodeid="2178">我们还是先看一段代码，快速了解它们的基本用法。</p><div class="course-code-area"><div class="copy-btn"><div class="copy-icon"></div> 复制代码 </div><pre><code data-language="javascript"><ol><li><div class="code-word"><span class="hljs-comment">// forEach方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>];
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> obj = {<span class="hljs-attr">name</span>:<span class="hljs-string">&#39;cc&#39;</span>};
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> sReturn = array.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value, index, array</span>)</span>{
+</div></li><li><div class="code-word">  array[index] = value;
+</div></li><li><div class="code-word">  <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.name); <span class="hljs-comment">// cc被打印了三次, this指向obj</span>
+</div></li><li><div class="code-word">},obj);
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array); <span class="hljs-comment">// [1, 3, 5]</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(sReturn); <span class="hljs-comment">// undefined, 可见返回值为undefined</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// every方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> o = {<span class="hljs-number">0</span>:<span class="hljs-number">10</span>, <span class="hljs-number">1</span>:<span class="hljs-number">8</span>, <span class="hljs-number">2</span>:<span class="hljs-number">25</span>, <span class="hljs-attr">length</span>:<span class="hljs-number">3</span>};
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> bool = <span class="hljs-built_in">Array</span>.prototype.every.call(o,<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value, index, obj</span>)</span>{
+</div></li><li><div class="code-word">  <span class="hljs-keyword">return</span> value &gt;= <span class="hljs-number">8</span>;
+</div></li><li><div class="code-word">},o);
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(bool); <span class="hljs-comment">// true</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// some方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-number">18</span>, <span class="hljs-number">9</span>, <span class="hljs-number">10</span>, <span class="hljs-number">35</span>, <span class="hljs-number">80</span>];
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> isExist = array.some(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value, index, array</span>)</span>{
+</div></li><li><div class="code-word">  <span class="hljs-keyword">return</span> value &gt; <span class="hljs-number">20</span>;
+</div></li><li><div class="code-word">});
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(isExist); <span class="hljs-comment">// true </span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// map 方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-number">18</span>, <span class="hljs-number">9</span>, <span class="hljs-number">10</span>, <span class="hljs-number">35</span>, <span class="hljs-number">80</span>];
+</div></li><li><div class="code-word">array.map(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item + <span class="hljs-number">1</span>);
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array);  <span class="hljs-comment">// [19, 10, 11, 36, 81]</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// filter 方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-number">18</span>, <span class="hljs-number">9</span>, <span class="hljs-number">10</span>, <span class="hljs-number">35</span>, <span class="hljs-number">80</span>];
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array2 = array.filter(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value, index, array</span>)</span>{
+</div></li><li><div class="code-word">  <span class="hljs-keyword">return</span> value &gt; <span class="hljs-number">20</span>;
+</div></li><li><div class="code-word">});
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array2); <span class="hljs-comment">// [35, 80]</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// reduce方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>];
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> s = array.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">previousValue, value, index, array</span>)</span>{
+</div></li><li><div class="code-word">  <span class="hljs-keyword">return</span> previousValue * value;
+</div></li><li><div class="code-word">},<span class="hljs-number">1</span>);
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(s); <span class="hljs-comment">// 24</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// ES6写法更加简洁</span>
+</div></li><li><div class="code-word">array.reduce(<span class="hljs-function">(<span class="hljs-params">p, v</span>) =&gt;</span> p * v); <span class="hljs-comment">// 24</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// reduceRight方法 (和reduce的区别就是从后往前累计)</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>];
+</div></li><li><div class="code-word">array.reduceRight(<span class="hljs-function">(<span class="hljs-params">p, v</span>) =&gt;</span> p * v); <span class="hljs-comment">// 24</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// entries方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-string">&quot;a&quot;</span>, <span class="hljs-string">&quot;b&quot;</span>, <span class="hljs-string">&quot;c&quot;</span>];
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> iterator = array.entries();
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(iterator.next().value); <span class="hljs-comment">// [0, &quot;a&quot;]</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(iterator.next().value); <span class="hljs-comment">// [1, &quot;b&quot;]</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(iterator.next().value); <span class="hljs-comment">// [2, &quot;c&quot;]</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(iterator.next().value); <span class="hljs-comment">// undefined, 迭代器处于数组末尾时, 再迭代就会返回undefined</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// find &amp; findIndex方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>, <span class="hljs-number">10</span>];
+</div></li><li><div class="code-word"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">f</span>(<span class="hljs-params">value, index, array</span>)</span>{
+</div></li><li><div class="code-word">  <span class="hljs-keyword">return</span> value%<span class="hljs-number">2</span>==<span class="hljs-number">0</span>;     <span class="hljs-comment">// 返回偶数</span>
+</div></li><li><div class="code-word">}
+</div></li><li><div class="code-word"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">f2</span>(<span class="hljs-params">value, index, array</span>)</span>{
+</div></li><li><div class="code-word">  <span class="hljs-keyword">return</span> value &gt; <span class="hljs-number">20</span>;     <span class="hljs-comment">// 返回大于20的数</span>
+</div></li><li><div class="code-word">}
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array.find(f)); <span class="hljs-comment">// 8</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array.find(f2)); <span class="hljs-comment">// undefined</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array.findIndex(f)); <span class="hljs-comment">// 4</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(array.findIndex(f2)); <span class="hljs-comment">// -1</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// keys方法</span>
+</div></li><li><div class="code-word">[...Array(<span class="hljs-number">10</span>).keys()];     <span class="hljs-comment">// [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</span>
+</div></li><li><div class="code-word">[...new <span class="hljs-built_in">Array</span>(<span class="hljs-number">10</span>).keys()]; <span class="hljs-comment">// [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// values方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> array = [<span class="hljs-string">&quot;abc&quot;</span>, <span class="hljs-string">&quot;xyz&quot;</span>];
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> iterator = array.values();
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(iterator.next().value);<span class="hljs-comment">//abc</span>
+</div></li><li><div class="code-word"><span class="hljs-built_in">console</span>.log(iterator.next().value);<span class="hljs-comment">//xyz</span>
+</div></li></ol></code></pre></div><p data-nodeid="2180"> 其中，要注意有些遍历方法不会返回处理之后的数组，比如 forEach；有些方法会返回处理之后的数组，比如 filter。这个细节你需要牢记，这样才会在面试过程中正确作答。 </p><p data-nodeid="2181"> reduce 方法也需要重点关注，其参数复杂且多，通常一些复杂的逻辑处理，其实使用 reduce 很容易就可以解决。我们重点看一下，reduce 到底能解决什么问题呢？先看下 reduce 的两个参数。 </p><p data-nodeid="2182"> 首先是 callback（一个在数组的每一项中调用的函数，接受四个参数）： </p><ol data-nodeid="2183"><li data-nodeid="2184"><p data-nodeid="2185"> previousValue（上一次调用回调函数时的返回值，或者初始值） </p></li><li data-nodeid="2186"><p data-nodeid="2187">currentValue（当前正在处理的数组元素）</p></li><li data-nodeid="2188"><p data-nodeid="2189">currentIndex（当前正在处理的数组元素下标）</p></li><li data-nodeid="2190"><p data-nodeid="2191">array（调用 reduce() 方法的数组）</p></li></ol><p data-nodeid="2192"> 然后是 initialValue（可选的初始值，作为第一次调用回调函数时传给 previousValue 的值）。 </p><p data-nodeid="2193"> 光靠文字描述其实看着会比较懵，我们还是通过一个例子来说明 reduce 的功能到底有多么强大。 </p><div class="course-code-area"><div class="copy-btn"><div class="copy-icon"></div> 复制代码 </div><pre><code data-language="javascript"><ol><li><div class="code-word"><span class="hljs-comment">/* 题目：数组 arr = [1,2,3,4] 求数组的和：*/</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// 第一种方法：</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> arr = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>];
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> sum = <span class="hljs-number">0</span>;
+</div></li><li><div class="code-word">arr.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">e</span>)</span>{sum += e;}); <span class="hljs-comment">// sum = 10</span>
+</div></li><li><div class="code-word"><span class="hljs-comment">// 第二种方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> arr = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>];
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> sum = <span class="hljs-number">0</span>;
+</div></li><li><div class="code-word">arr.map(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">obj</span>)</span>{sum += obj});
+</div></li><li><div class="code-word"><span class="hljs-comment">// 第三种方法</span>
+</div></li><li><div class="code-word"><span class="hljs-keyword">var</span> arr = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>];
+</div></li><li><div class="code-word">arr.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">pre,cur</span>)</span>{<span class="hljs-keyword">return</span> pre + cur});
+</div></li></ol></code></pre></div><p data-nodeid="2195"> 从上面代码可以看出，我们分别用了 forEach 和 map 都能实现数组的求和，其中需要另外新定义一个变量 sum，再进行累加求和，最后再来看 sum 的值，而 reduce 不仅可以少定义一个变量，而且也会直接返回最后累加的结果，是不是问题就可以轻松解决了？ </p><p data-nodeid="2196">那么我们结合一道题目来看看 reduce 怎么用。</p><p data-nodeid="2197"><strong data-nodeid="2380">题目：</strong> var arr = [ {name: &#39;brick1&#39;}, {name: &#39;brick2&#39;}, {name: &#39;brick3&#39;} ] </p><p data-nodeid="2198"> 希望最后返回到 arr 里面每个对象的 name 拼接数据为 &#39;brick1, brick2 &amp; brick3&#39; ，如果用 reduce 如何实现呢？ </p><div class="course-code-area"><div class="copy-btn"><div class="copy-icon"></div> 复制代码 </div><pre><code data-language="javascript"><ol><li><div class="code-word"><span class="hljs-keyword">var</span> arr =  [ {<span class="hljs-attr">name</span>: <span class="hljs-string">&#39;one&#39;</span>}, {<span class="hljs-attr">name</span>: <span class="hljs-string">&#39;two&#39;</span>}, {<span class="hljs-attr">name</span>: <span class="hljs-string">&#39;three&#39;</span>} ];
+</div></li><li><div class="code-word">arr.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">prev, current, index, array</span>)</span>{
+</div></li><li><div class="code-word">  <span class="hljs-keyword">if</span> (index === <span class="hljs-number">0</span>){
+</div></li><li><div class="code-word">    <span class="hljs-keyword">return</span> current.name;
+</div></li><li><div class="code-word">  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (index === array.length - <span class="hljs-number">1</span>){
+</div></li><li><div class="code-word">    <span class="hljs-keyword">return</span> prev + <span class="hljs-string">&#39; &amp; &#39;</span> + current.name;
+</div></li><li><div class="code-word">  } <span class="hljs-keyword">else</span> {
+</div></li><li><div class="code-word">    <span class="hljs-keyword">return</span> prev + <span class="hljs-string">&#39;, &#39;</span> + current.name;
+</div></li><li><div class="code-word">  }
+</div></li><li><div class="code-word">}, <span class="hljs-string">&#39;&#39;</span>);
+</div></li><li><div class="code-word"><span class="hljs-comment">// 返回结果 &quot;one, two &amp; three&quot;</span>
+</div></li></ol></code></pre></div><p data-nodeid="2200"> 从上面的答案也可以看出来，用 reduce 就能很轻松地对数组进行遍历，然后进行一些复杂的累加处理操作即可。<br> 到这里，数组遍历的方法也基本讲解差不多了，这一讲也将告一段落。 </p><h3 data-nodeid="2201">总结</h3><p data-nodeid="2202"> 下面我将令人“眼花缭乱”的数组的基础 API 简单做了个总结表格，方便你更清晰地回顾本课时所讲的内容。 </p><p data-nodeid="2203"><img src="https://s0.lgstatic.com/i/image2/M01/09/CC/Cip5yGAP1k2ACVqpAAE5zFVPD7o375.png" alt="Lark20210126-164334.png" data-nodeid="2395"></p><p data-nodeid="2204"> 以上，数组的各方法基本讲解完毕，这些方法之间存在很多共性，如下： </p><ul data-nodeid="2205"><li data-nodeid="2206"><p data-nodeid="2207"> 所有插入元素的方法，比如 push、unshift 一律返回数组新的长度； </p></li><li data-nodeid="2208"><p data-nodeid="2209"> 所有删除元素的方法，比如 pop、shift、splice 一律返回删除的元素，或者返回删除的多个元素组成的数组； </p></li><li data-nodeid="2210"><p data-nodeid="2211"> 部分遍历方法，比如 forEach、every、some、filter、map、find、findIndex，它们都包含 function(value,index,array){} 和 thisArg 这样两个形参。 </p></li></ul><p data-nodeid="2212"> 在日常的前端开发工作中，开发者往往会忽视对数组 API 方法的系统性学习，但其实因为数组的方法较多，每个方法的参数和细节也比较零散，很多开发者很难有一个系统的、整体的认识，在开发过程中还要频繁地查询 MDN 文档，造成效率低下以及代码能力难以进一步提升等问题。 </p><p data-nodeid="2213"> 因此我希望通过这一讲的学习，你能很好地掌握数组的 API 方法，以便在开发中规避我所说的这些问题。 </p><p data-nodeid="2214" class=""> 在后续的课程中，我将继续带领你尝试一些数组 API 方法的手工实现。同时希望你多动手练习以熟练使用所学的知识点，也欢迎你在下方留言讨论自己在学习过程中遇到的困惑，以及学习感悟等，让我们共同进步。 </p></div><!--]--></div><footer class="page-meta"><!----><div class="meta-item last-updated"><span class="meta-item-label">Last Updated: </span><!----></div><div class="meta-item contributors"><span class="meta-item-label">Contributors: </span><span class="meta-item-info"><!--[--><!--[--><span class="contributor" title="email: lexzhang13@qq.com">zhang13pro</span><!----><!--]--><!--]--></span></div></footer><!----><!--[--><!--]--></main><!--]--></div><!----><!--]--></div>
+    <script type="module" src="/assets/app.7723def3.js" defer></script>
+  </body>
+</html>
